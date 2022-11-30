@@ -1,0 +1,377 @@
+div.container {
+
+  width: 80%;
+  height: 45vw;
+  overflow: auto;
+
+}
+
+div.container>div.menu {
+  background-color: white;
+  height: 20%;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+
+}
+
+div.container>div.menu h1 {
+  color: var(--Effect3);
+  padding: 0.50vw;
+  font-weight: 400;
+  text-align: center;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+div.container>h1>b {
+  font-weight: 700;
+}
+
+div.menu a {
+  width: calc(100% / 2 - 1vw);
+  padding: 1vw;
+  color: white;
+  margin: 0.50vw;
+  cursor: pointer;
+  transition: ease-in-out 0.2s;
+}
+
+.add {
+  background-color: var(--trueTheme);
+}
+
+.remover {
+  background-color: var(--cancelTheme2);
+}
+
+.add:hover {
+  background-color: var(--trueTheme2);
+}
+
+.remover:hover {
+  background-color: var(--cancelTheme);
+}
+
+div.menu a:hover {
+  transform: scale(104%);
+}
+
+div.menu a>i {
+  margin-right: 0.25vw;
+}
+
+div.buscarInfo {
+  align-items: center;
+  justify-content: center;
+  padding: 0.50vw 2vw;
+  background-color: var(--Effect3);
+
+}
+
+div.buscarInfo form {
+  width: 90%;
+
+}
+
+div.buscarInfo small {
+  display: block;
+  width: 100%;
+  color: black;
+  background-color: var(--Effect3);
+}
+
+div.buscarInfo i {
+  font-size: 1.50vw;
+  text-shadow: 0.2vw 0.2vw #000000;
+  background-color: var(--Effect2);
+  color: var(--Effect3);
+  padding: 0.50vw;
+  width: 5%;
+  text-align: center;
+}
+
+div.buscarInfo #buscar {
+  width: 95%;
+  border: 0;
+  outline: 0;
+  padding: 0.50vw;
+  background-color: white;
+  color: var(--Effect2);
+  transition: ease-in-out 0.2s;
+}
+
+div.buscarInfo #buscar:focus {
+  color: black;
+  background-color: #dddddd;
+}
+
+div.informacoesWrapper {
+  width: 100%;
+  height: 68%;
+  /* padding:0.50vw; */
+}
+
+div.menuInfo {
+  background-color: var(--backgroundTheme);
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.50vw 0.50vw;
+}
+
+div.menuInfo a,
+h3 {
+  width: calc(100% /6);
+  text-align: center;
+  cursor: pointer;
+  text-transform: uppercase;
+  color: black;
+}
+
+div.informacoesWrapper h4 a {
+  display: block;
+  width: calc(100% / 2);
+  padding: 0.30vw;
+  cursor: pointer;
+  font-size: 1vw;
+  transition: ease-in-out 0.2s;
+  color: #000000;
+  text-shadow: 0vw 0.1vw #ffffff;
+
+}
+
+
+
+div.informacoesWrapper h4 a#editInfo:hover>i,
+a#deleteInfo:hover>i {
+  transform: scale(105%);
+  color: white;
+  text-shadow: 0vw 0.1vw #000000;
+
+}
+
+
+
+div.menuInfo,
+div.informacoes {
+  height: calc(100% / 11);
+}
+
+div.informacoes {
+
+  background-color: var(--Effect2);
+
+  color: white;
+
+  align-items: center;
+
+  justify-content: center;
+
+  transition: ease-in-out 0.2s;
+
+}
+
+div.informacoes.dark {
+
+  background-color: var(--Effect);
+  color: white;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+div.informacoes h4 {
+  width: calc(100% / 6);
+  text-align: center;
+}
+
+div.informacoes:hover {
+  transform: scale(103%);
+  background-color: #4b4b4bea;
+}
+
+.containerCheck {
+  position: relative;
+  cursor: pointer;
+  font-size: 1.20vw;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.containerCheck input {
+
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  /* top: =2vw; */
+  right: -1.50vw;
+  height: 1.30vw;
+  width: 1.30vw;
+
+  background-color: #eee;
+}
+
+div.informacoes .checkmark {
+  right: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* On mouse-over, add a grey background color */
+.containerCheck:hover input~.checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.containerCheck input:checked~.checkmark {
+  background-color: var(--cancelTheme);
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  position: absolute;
+  content: '';
+
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.containerCheck input:checked~.checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.containerCheck .checkmark:after {
+  left: 35%;
+  top: 10%;
+  transform: translate(-50%, -50%);
+  width: 0.3vw;
+  height: 0.8vw;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+div.paginacao {
+  width: 100%;
+  height: 12%;
+  background-color: var(--backgroundTheme);
+  justify-content: space-evenly;
+  align-items: center;
+  user-select: none;
+}
+
+div.paginacao h1 {
+
+  cursor: pointer;
+
+}
+
+div.paginacao a {
+  padding: 1vw 2vw;
+  color: white;
+  background-color: var(--Effect);
+  box-shadow: rgba(0, 0, 0, 0.89) 0.1vw 0.1vw 0.2vw 0.1vw;
+  text-shadow: 0.1vw 0.1vw #000000;
+  transition: ease-in-out 0.2s;
+}
+
+div.paginacao a.marcado {
+  background-color: var(--Effect2);
+
+}
+
+div.paginacao a:hover {
+  background-color: var(--Effect3);
+}
+
+@media (max-width:1200px) {
+  div.container>div.menu {
+    height: 15%;
+    min-height: 140px;
+    
+  }
+
+  div.paginacao {
+    height: 8%;
+    min-height: 70px;
+    padding: 0.50vw;
+    flex-flow: column wrap;
+    overflow-x: auto;
+  }
+
+  div.informacoesWrapper {
+    height: 77%;
+    min-height: 550px;
+    
+  }
+
+  div.menuInfo,
+  div.informacoes {
+    height: calc(100% / 11);
+    width: 100%;
+    min-width: 1036px;
+  }
+
+  div.informacoesWrapper {
+    position: relative;
+    overflow-x: auto;
+    width: 100%;
+
+  }
+
+  .checkmark {
+    right: -30px;
+    height: 20px;
+    width: 20px;
+  }
+
+  .containerCheck .checkmark::after {
+    width: 5px;
+    height: 12px;
+  }
+
+  div.paginacao a {
+    min-width: 9%;
+    margin: 0% 2%;
+  }
+  div.informacoes:hover {
+    transform: scale(100%);
+  }
+  div.buscarInfo form {
+    width: 100%;
+  }
+  div.buscarInfo #buscar {
+    width: 90%;
+  }
+  div.buscarInfo i {
+    font-size: 35px;
+    width: 10%;
+  }
+  div.menuInfo {
+ 
+   padding:0;
+  }
+}
+
+@media (max-width: 570px) {
+  div.container>div.menu {
+    height: 15%;
+    min-height: 173px;
+    flex-flow: row wrap;
+  }
+  div.container > div.menu div,h1{
+    width: 100%;
+  }
+  div.container > div.menu h1, div.menu h1 > b {
+    width: 100%;
+  }
+}

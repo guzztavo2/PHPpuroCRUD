@@ -1,0 +1,83 @@
+h1.textShadow{
+    text-shadow: 0.1vw 0vw #ffffff;
+
+}
+h1{
+    text-transform: capitalize;
+    font-weight: 100;
+    background-color: white;
+}
+h1 > b{
+    text-transform: uppercase;
+}
+
+div.menulinks small{
+    
+    text-align: center;
+    font-size: 0.50vw;
+  
+
+}
+div.menulinks small a{
+    width: 100%;
+    display:block;
+    padding:0.25vw;
+    color:black;
+    font-weight: 100;
+}
+div.menulinks small a i{
+
+    
+    padding:0.30vw 0.35vw;
+    border-radius: 100%;
+    text-align: center;
+}
+div.menulinks small:hover{
+    background-color: rgba(0, 0, 0, 0.692);
+    transition: ease-in-out 0.2s;
+
+}
+div.menulinks small:hover > a{
+    color:white;
+    transition: ease-in-out 0.2s;
+}
+div.menulinks small:hover > a > i{
+    color:white;
+    transition: ease-in-out 0.2s;
+
+}
+div.menulinks small.delete:hover > a > i{
+    background-color: var(--cancelTheme);
+    
+    
+}
+div.menulinks small.home:hover > a > i{
+    background-color: var(--trueTheme);
+    
+}
+div.menulinks small.add:hover > a > i{
+    background-color: var(--fontTheme);
+    
+}
+
+div.adicionarInformacaoWrapper{
+    background-color: var(--Effect);    
+    height: 70%;
+}
+
+div.adicionarInformacaoWrapper div.inputQuantidade{
+    background-color: var(--Effect2);
+    padding:0.25vw;
+    
+}
+div.inputQuantidade small{
+    padding:0.25vw;
+    user-select: none;
+    cursor: pointer;
+}
+div.inputQuantidade input{
+    width: 80%;
+    padding: 0.25vw;
+    border:0;
+    outline:0;
+}
