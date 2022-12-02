@@ -1,20 +1,19 @@
-h1.textShadow{
+h1.textShadow.title{
     text-shadow: 0.1vw 0vw #ffffff;
 
 }
-h1{
+h1.title{
     text-transform: capitalize;
     font-weight: 100;
     background-color: white;
 }
-h1 > b{
+h1.title > b{
     text-transform: uppercase;
 }
 
 div.menulinks small{
     
     text-align: center;
-    font-size: 0.50vw;
   
 
 }

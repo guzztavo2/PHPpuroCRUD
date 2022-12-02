@@ -1,9 +1,11 @@
+import { mainJS } from '../main.js';
+
 window.onload = function () {
+
     main();
 
     function main() {
         actionToButtons();
-
 
 
 
@@ -13,7 +15,17 @@ window.onload = function () {
         selecionarTodasInformacoesPagina();
         addLinksInButtons();
     }
+    var ArrInputs = [];
+    function checkMark(listChecks, inputToRemove){
+        let chave = ArrInputs.length;
+        if(listChecks !== undefined){
+            ArrInputs[chave] = listChecks;
 
+        }else if(inputToRemove !== undefined){
+
+        }
+    
+    }
     function addLinksInButtons() {
         menuH1Button();
 
@@ -32,7 +44,10 @@ window.onload = function () {
         var listOfChecks = document.querySelectorAll('div.informacoesWrapper h4 input#checkInfo');
 
         selectInput.addEventListener('change', function () {
+            alert('a');
+
             marcaTodosCheckBox(this.checked);
+
         })
 
         addEventChange(listOfChecks);
@@ -46,14 +61,17 @@ window.onload = function () {
                     let itemChildren = item.children[0].children[0].children[0];
                     if (itemChildren.checked) {
                         itemChildren.checked = false;
+                        selectandCompare(undefined, itemChildren);
+
                     } else {
                         itemChildren.checked = true;
+                        selectandCompare(itemChildren);
+
                     }
                     selectandCompare();
 
                 })
                 item.addEventListener('dblclick', function () {
-                    console.log();
                     window.location.href = HOME_PATH + 'view/id/' + item.children[1].innerHTML;
                 })
             })
@@ -81,23 +99,29 @@ window.onload = function () {
     function addEventChange(listOfChecks) {
         listOfChecks.forEach(function (item) {
             item.addEventListener('change', function () {
-                selectandCompare();
-
+            
+                selectandCompare(this);
+                
             })
         })
 
     }
-    function selectandCompare() {
+    function selectandCompare(localCheckInput, inputToRemove) {
         var listOfChecks = document.querySelectorAll('div.informacoesWrapper h4 input#checkInfo');
+
 
         let selectInput = document.querySelector('input#selecionarTodos');
         let listCheckTrue = listCheckTrueFunc(listOfChecks);
-        if (listOfChecks.length !== listCheckTrue.length)
+        if (listOfChecks.length !== listCheckTrue.length){
+            checkMark(undefined, inputToRemove);
             selectInput.checked = false;
-        else if (listOfChecks.length === listCheckTrue.length)
+        }
+        else if (listOfChecks.length === listCheckTrue.length){
+            checkMark(localCheckInput);
             selectInput.checked = true;
-        //transicaoCheckBox(listCheckTrue);
 
+        }
+        //transicaoCheckBox(listCheckTrue);
         return;
     }
     function listCheckTrueFunc(listOfChecks) {
@@ -110,12 +134,12 @@ window.onload = function () {
 
         return listCheckTrue;
     }
-    function listCheckFalse(){
+    function listCheckFalse() {
         var listOfChecks = document.querySelectorAll('div.informacoesWrapper h4 input#checkInfo');
         let listCheckFalse = [];
 
-        listOfChecks.forEach(function(item){
-            if(item.checked === false){
+        listOfChecks.forEach(function (item) {
+            if (item.checked === false) {
                 listCheckFalse.push(item);
             }
         })
@@ -137,19 +161,12 @@ window.onload = function () {
 
     }
     function reconfigurarCores(listCheck) {
-        console.log(listCheck);
         for (let n = 0; n < listCheck.length; n++) {
             let item = listCheck[n].parentElement.parentElement.parentElement;
-
-            if (n % 2 === 0) {
+            if (n % 2 === 0)
                 item.classList.add('dark');
-                console.log(item);
-            } else {
+            else
                 item.classList.remove('dark');
-                console.log(item);
-
-
-            }
         }
     }
 }

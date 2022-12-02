@@ -35,9 +35,8 @@ class informacaoView
                 if (strlen($var->getInformacao()) >= 30) {
                     $informacao = substr($var->getInformacao(), 0, 27);
                     $informacao .= '...';
-                    
-                    return $informacao;
 
+                    return $informacao;
                 } else
                     return $var->getInformacao();
 
@@ -68,8 +67,12 @@ class informacaoView
         if ($typeFiles === 'css') {
             $listFiles[] = application::HOME_PATH . str_replace('\\', '/', $diretorio) . '/main.css';
             $listFiles[] = application::HOME_PATH . str_replace('\\', '/', $diretorio) . '/all.min.css';
-        } else if ($typeFiles === 'js')
-            $listFiles[] = application::HOME_PATH . str_replace('\\', '/', $diretorio) . '/code.js';
+        } else if ($typeFiles === 'js'){
+            $listFiles[] = application::HOME_PATH . str_replace('\\', '/', $diretorio) . '/main.js';
+            // ob_clean();
+            // application::visualizarArray($diretorio);
+            // die();
+        }
 
         $diretorio .= '\\' . $this->typePage . '\\';
         $files = new FilesystemIterator('.\\' . $diretorio);
@@ -86,7 +89,7 @@ class informacaoView
             }
         } else if ($typeFiles === 'js') {
             foreach ($listFiles as $file) {
-                echo '<script async type="text/javascript" src="' . $file . '"></script>';
+                echo '<script type="Module" src="' . $file . '" type="module"></script>';
             }
         }
     }
@@ -125,7 +128,7 @@ class informacaoView
                 break;
             default:
                 application::redirect(informacaoController::URLinformacaoController);
-            break;
+                break;
         }
     }
 
@@ -156,7 +159,7 @@ class informacaoView
 
         return $resultado;
     }
- 
+
     public static function generateGETurl($chave, $valor): string
     {
 
@@ -173,25 +176,31 @@ class informacaoView
 
         if ($quantidadeTotal === 0)
             return null;
-        
-  
+
+
         $porPagina = self::ELEMENTOS_POR_PAGINA;
         $paginaAtual = informacaoController::inputGETPageAtual();
 
 
-       
+
         // USAR ESTILO PAGINACAO GOOGLE
         $quantidade = $quantidadeTotal;
         $quantidadePaginas =  ceil($quantidade / $porPagina) - 1;
 
         if ($paginaAtual < 1)
             application::redirect(application::HOME_PATH . $_GET['url'] . '?pagina=1');
-            
-            return $paginaAtual;
+
+        return $paginaAtual;
     }
     private static function addPage(): array
     {
-        return [];
+        $quantidadeinput = isset($_GET['quantidadeinput']) ? filter_input(INPUT_GET, 'quantidadeinput', FILTER_VALIDATE_INT) : 1;
+        if ($quantidadeinput === false) {
+            echo "Nessa requisição, é necessário passar apenas números. Provavelmente algum engano ou erro. <a href=" . informacaoController::URLinformacaoController . ">Clique aqui para voltar para a pagina inicial</a>.";
+            die();
+        }
+
+        return ['quantidadeinput' => $quantidadeinput];
     }
     private function deletePage()
     {

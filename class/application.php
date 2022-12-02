@@ -10,7 +10,7 @@ class application extends fileurls
 {
     const HOME_PATH = HOME_URL;
     static private $listControllers = array('informacao');
-    const LIST_GETS = array('url','pagina', 'orderBy', 'asc', 'desc','buscar');
+    const LIST_GETS = array('url','pagina', 'orderBy', 'asc', 'desc','buscar','quantidadeinput');
     function __construct()
     {
 

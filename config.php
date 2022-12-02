@@ -38,9 +38,7 @@ if (!defined('TB_INFORMACOES'))
 if (!defined('HOME_URL'))
     define('HOME_URL', URL.HOME.'/');
 
-ob_clean();
-print_r(get_defined_constants(true)['user']);
-die();
+
 // REDIRECIONAR POR SEGURANÇA
 function redirectSecurity()
 {
@@ -61,7 +59,7 @@ function reescreverHTACCESS()
     RewriteCond %{SCRIPT_FILENAME} !-d
     RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
     SetEnvIf Referer ".HOME_URL." localreferer
-    <FilesMatch \.(jpg|jpeg|png|gif|css|js)$>
+    <FilesMatch \.(jpg|jpeg|png|gif|css)$>
     Order deny,allow
     Deny from all
     Allow from env=localreferer

@@ -1,0 +1,13 @@
+Options -Indexes
+    RewriteEngine On
+    RewriteCond %{SCRIPT_FILENAME} !-f
+    RewriteCond %{SCRIPT_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+    SetEnvIf Referer http://192.168.100.7/phpPuroCRUD/ localreferer
+    <FilesMatch \.(jpg|jpeg|png|gif|css)$>
+    Order deny,allow
+    Deny from all
+    Allow from env=localreferer
+    </FilesMatch>
+    ErrorDocument 403 /phpPuroCRUD/index.php
+    

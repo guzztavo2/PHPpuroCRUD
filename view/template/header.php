@@ -20,4 +20,7 @@ if (!defined('APP_ROOT')) {
 </head>
 
 <body>
-<script> const HOME_PATH =" <?php echo application::HOME_PATH; ?>"</script>
+<script> const HOME_PATH =" <?php echo informacaoController::URLinformacaoController ?>"
+                const LOCAL_PATH = "<?php echo informacaoController::URLinformacaoController.self::getTypePage(); ?>";
+
+</script>
