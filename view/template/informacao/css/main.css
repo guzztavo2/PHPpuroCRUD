@@ -40,7 +40,7 @@ input,a {
 }
 
 h4,
-small {
+small,i {
     font-size: 1vw;
 }
 
@@ -74,7 +74,7 @@ div.container{
     
 }
 .box{
-    padding:0.50vw 1vw;
+    padding:1% 2%;
 }
 .textShadow{
     text-shadow: 0.1vw 0.1vw #000000;
@@ -138,6 +138,9 @@ div.paginacao a:hover {
     }
   }
   
+  .opacityNone{
+    opacity: 0%;
+  }
   @media (max-width:1200px) {
     div.container {
   
@@ -162,7 +165,7 @@ div.paginacao a:hover {
     }
   
     h4,
-    small {
+    small,i {
       font-size: 18px;
     }
   }  

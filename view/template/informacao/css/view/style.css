@@ -110,7 +110,7 @@ div.menuInfo {
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 0.50vw 0.50vw;
+  /* padding: 0.50vw 0.50vw; */
 }
 
 div.menuInfo a,
@@ -357,8 +357,8 @@ div.paginacao a:hover {
 
 @media (max-width: 570px) {
   div.container>div.menu {
-    height: 15%;
-    min-height: 173px;
+    height: 25%;
+    min-height: 250px;
     flex-flow: row wrap;
   }
   div.container > div.menu div,h1{

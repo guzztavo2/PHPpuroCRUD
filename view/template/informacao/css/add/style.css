@@ -60,23 +60,65 @@ div.menulinks small.add:hover > a > i{
 }
 
 div.adicionarInformacaoWrapper{
-    background-color: var(--Effect);    
+    background-color: var(--Effect);
     height: 70%;
 }
 
+div.informacaoWrapper{
+
+    height: calc(100% / 6 );
+    flex-flow: column nowrap;
+    padding: 0 1%;
+ 
+}
+
+div.informacaoWrapper input{
+    padding: 0.5%;
+    border:0;
+    outline:0;
+
+}
 div.adicionarInformacaoWrapper div.inputQuantidade{
     background-color: var(--Effect2);
     padding:0.25vw;
     
 }
 div.inputQuantidade small{
-    padding:0.25vw;
+    padding:0.2%;
     user-select: none;
     cursor: pointer;
+    color:white;
 }
 div.inputQuantidade input{
     width: 80%;
     padding: 0.25vw;
     border:0;
     outline:0;
+}
+
+div.listInput{
+    height: 87%;
+}
+div.listInput form{
+    height: 100%;
+}
+div.listInput label{
+    color:white;
+}
+div.buttonWrapp{
+    align-items: center;
+    justify-content: center;
+}
+div.buttonWrapp btn{
+    color:white;
+    text-align: center;
+    background-color: red;
+    height: 100%;
+}
+div.buttonWrapp btn.Cancelar h3{
+    color:white;
+
+}
+div.buttonWrapp btn.Salvar h3{
+    color:white;
 }

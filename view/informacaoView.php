@@ -22,6 +22,7 @@ class informacaoView
     {
         $this->typePage =  application::$URL[1];
     }
+
     public static function getVarData($var, $key): string | null
     {
         // var_export($var);
@@ -59,6 +60,95 @@ class informacaoView
         $this->includeFiles('css');
         $this->includeFiles('js');
     }
+    private function verificarPOST($typePost)
+    {
+
+        if (isset($_POST) && count($_POST) > 0) {
+
+            ob_clean();
+
+            switch ($typePost) {
+                case 'view':
+                    $this->viewPost();
+                    break;
+            }
+
+            die();
+        }
+    }
+    private function ViewPost()
+    {
+        $listSelectedItens = filter_input_array(INPUT_POST, FILTER_VALIDATE_INT);
+
+
+        $tipoItem = explode('/', key($listSelectedItens))[0];
+
+        switch ($tipoItem) {
+            case 'IDChecked':
+                $this->postIDChecked($listSelectedItens);
+                break;
+            case 'IDUnchecked':
+                $this->postIDUncheked($listSelectedItens);
+                break;
+            case 'DELETE_SELECTED_ITENS':
+                setcookie('SELECTED_ITENS', null, -1);
+                break;
+            case 'QUANTIDADE_ITENS_SELECIONADOS':
+                $listCookieSelected = filter_input(INPUT_COOKIE, 'SELECTED_ITENS', FILTER_DEFAULT);
+
+                $listCookieSelected = (isset($listCookieSelected)) ? $listCookieSelected : null;
+                $listCookieSelectedCount = 0;
+                if ($listCookieSelected !== null)
+                    $listCookieSelectedCount = (count(json_decode($listCookieSelected, JSON_OBJECT_AS_ARRAY)) > 0) ? count((array)json_decode($listCookieSelected)) : 0;
+                echo $listCookieSelectedCount;
+                break;
+            default:
+                redirectSecurity();
+        }
+    }
+    private function postIDChecked($listSelectedItens)
+    {
+
+        $listSelectedItens = array_values($listSelectedItens);
+
+        //setcookie('SELECTED_ITENS', '', -1);
+
+        //echo 'Linha 106:' . var_export($_COOKIE);
+
+
+        if (isset($_COOKIE['SELECTED_ITENS'])) {
+            $listCookieSelected = json_decode(filter_input(INPUT_COOKIE, 'SELECTED_ITENS', FILTER_DEFAULT));
+            //$listSelectedItens = (array)$listSelectedItens;
+            $listCookieSelected = array_values((array)$listCookieSelected);
+            if (count($listCookieSelected) > 0) {
+                application::removeAndReplaceArrayElement($listSelectedItens, $listCookieSelected);
+                asort($listSelectedItens, SORT_ASC);
+                setcookie('SELECTED_ITENS', json_encode($listSelectedItens), strtotime('+ 2 days'));
+                return;
+            }
+        }
+        setcookie('SELECTED_ITENS', json_encode($listSelectedItens), strtotime('+ 2 days'));
+    }
+    private function postIDUncheked($listUnselectedItens)
+    {
+        $ListUnselectedItem = array_values($listUnselectedItens);
+        if (isset($_COOKIE['SELECTED_ITENS'])) {
+            $listCookieSelected = json_decode(filter_input(INPUT_COOKIE, 'SELECTED_ITENS', FILTER_DEFAULT));
+            $listCookieSelected = array_values((array)$listCookieSelected);
+
+            foreach ($ListUnselectedItem as $unselectedItem) {
+                if (array_search($unselectedItem, $listCookieSelected) !== false) {
+                    $key = array_search($unselectedItem, $listCookieSelected);
+                    unset($listCookieSelected[$key]);
+                }
+            }
+
+            asort($listCookieSelected, SORT_ASC);
+
+            setcookie('SELECTED_ITENS', json_encode($listCookieSelected), strtotime('+ 2 days'));
+        }
+        return;
+    }
     private function includeFiles($typeFiles)
     {
         $listFiles = [];
@@ -67,7 +157,7 @@ class informacaoView
         if ($typeFiles === 'css') {
             $listFiles[] = application::HOME_PATH . str_replace('\\', '/', $diretorio) . '/main.css';
             $listFiles[] = application::HOME_PATH . str_replace('\\', '/', $diretorio) . '/all.min.css';
-        } else if ($typeFiles === 'js'){
+        } else if ($typeFiles === 'js') {
             $listFiles[] = application::HOME_PATH . str_replace('\\', '/', $diretorio) . '/main.js';
             // ob_clean();
             // application::visualizarArray($diretorio);
@@ -89,7 +179,7 @@ class informacaoView
             }
         } else if ($typeFiles === 'js') {
             foreach ($listFiles as $file) {
-                echo '<script type="Module" src="' . $file . '" type="module"></script>';
+                echo '<script type="Module" src="' . $file . '"></script>';
             }
         }
     }
@@ -101,7 +191,7 @@ class informacaoView
         else if (isset($_GET['desc']))
             $urlAtual = URL_ATUAL . "?orderBy=$parametro&asc";
         else
-            $urlAtual = URL_ATUAL . "?orderBy=$parametro&asc";
+            $urlAtual = URL_ATUAL . "?orderBy=$parametro&desc";
 
         return $urlAtual;
     }
@@ -134,6 +224,7 @@ class informacaoView
 
     private function renderizar(array $dataPage = null)
     {
+        $this->verificarPOST($this->getTypePage());
 
         require_once('template/header.php');
         require_once('template/informacao/' . $this->getTypePage() . '.php');
@@ -194,6 +285,7 @@ class informacaoView
     }
     private static function addPage(): array
     {
+
         $quantidadeinput = isset($_GET['quantidadeinput']) ? filter_input(INPUT_GET, 'quantidadeinput', FILTER_VALIDATE_INT) : 1;
         if ($quantidadeinput === false) {
             echo "Nessa requisição, é necessário passar apenas números. Provavelmente algum engano ou erro. <a href=" . informacaoController::URLinformacaoController . ">Clique aqui para voltar para a pagina inicial</a>.";
@@ -203,35 +295,6 @@ class informacaoView
         return ['quantidadeinput' => $quantidadeinput];
     }
     private function deletePage()
-    {
-    }
-
-    public static function setCookie(String $chave, String | array $valor)
-    {
-
-        if (gettype($valor) === 'array') {
-            foreach ($valor as $key => $value)
-                $valor[$key] = (array) $value;
-
-            $valor = json_encode($valor);
-        }
-
-        setcookie($chave, $valor, strtotime('+10 days'));
-    }
-    public static function verificarCookie($chave): bool
-    {
-        if ($_COOKIE[$chave] !== null && strlen($_COOKIE[$chave]) > 0)
-            return true;
-        else {
-            setcookie($chave, null, -1);
-            return false;
-        }
-    }
-    public static function destruirCookie($chave)
-    {
-        setcookie($chave, null, -1);
-    }
-    public static function setCookie_array(array $array)
     {
     }
 }

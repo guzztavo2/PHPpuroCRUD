@@ -33,40 +33,74 @@ class formPrepare {
     setChaveForm(ChaveForm) {
         this.ChaveForm = ValorForm;
     }
-    formListPrepare(listToObect) {
+    formListPrepare(listToObect, key) {
 
         let listResult = [];
 
 
-        for (let n = 0; n <= listToObect.length - 2; n++) {
-            console.log(n);
-            console.log(++n);
-            let item = new formPrepare(listToObect[n], listToObect[++n]);
+        for (let n = 0; n < listToObect.length; n++) {
+            let item = new formPrepare(key, listToObect[n]);
             listResult.push(item);
         }
         return listResult;
 
     }
+
+    static objectToList(objectList) {
+        let result = [];
+        objectList.forEach(function (item) {
+            result.push(Object.values(item));
+
+        });
+        return result;
+    }
 }
 class conexaoPHP {
 
-    preparePOSTForm(formPrepareListOrVar) {
-
+    setFormResponse(element) {
+        this.formResponse = element;
+    }
+    setPOSTsendToServer(formPrepareObjectOrList) {
+        let listItens = formPrepare.objectToList(formPrepareObjectOrList);
+        let form = new FormData(), count = 0;
+        listItens.forEach(function (item) {
+            //item[0] = ID
+            //item[1] = valor
+            form.append(item[0] + '/' + count, item[1]);
+            ++count;
+        })
+        console.log(form);
+        this.formPrepare = form;
     }
     prepare(postGetConection, url) {
-        let xhr = XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
         xhr.open(postGetConection, url);
+        this.XMLHttpRequest = xhr;
+
     }
 
-    conectar(url, tipo) {
+    conectar() {
+        if (this.XMLHttpRequest === null || this.XMLHttpRequest === undefined)
+            throw new Error('Você precisa definir o PREPARE desse OBJETO para poder utiliza-lo.');
 
-        // xhr.send();
+        let xhr = this.XMLHttpRequest;
+        if (this.formPrepare !== null && this.formPrepare !== undefined)
+            xhr.send(this.formPrepare);
+        else
+            xhr.send();
 
-        // xhr.onload() = function(){
-        //     if(xhr.status === 200){
-        //         console.log(xhr.response);
-        //     }
-        // }
+        if (this.formResponse !== undefined) {
+            let formResponse = this.formResponse;
+            xhr.onloadend = function () {
+                console.log(this.response);
+
+                formResponse.innerHTML = this.response;
+            }
+        } else {
+            xhr.onloadend = function () {
+                //console.log(this.response);
+            }
+        }
 
     }
 
