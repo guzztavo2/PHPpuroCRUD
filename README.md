@@ -19,6 +19,7 @@
 - As variáveis do tipo pedido String chama-se '$informacao', '$dataCriacao' e '$dataAtualizacao':
 Cada uma guarda-se a informação requerida em seu proprio nome, entretanto as informação são mudadas conforme são requisitadas em seus devidos GET's & SET's:
 - Por exemplo: quando chama-se a variável do tipo 'Informacao->$informacao' dentro da view, ela análisa sinteticamente a botar um limite de 30 caracteres (para não quebrar o FRONT-END). 
+- Isso vale também para as informações do tipo: $dataAtualizacao, que recebem o construtor nativo Date() do PHP. 
 
 ### PS: também temos o arquivo chamado 'SuperModel.php', onde ele se extende através das classes de MODEL, onde ela automaticamente adiciona outros duas variaveis. Chama-se '$id' e '$tableName', que é para melhor trabalhar com o banco de dados.
 
