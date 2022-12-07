@@ -1,10 +1,10 @@
 <?php
 // CONFIGURAÇÕES GERAIS
 if(!defined('HOME'))
-    define('HOME', 'phpPuroCRUD');
+    define('HOME', 'phpPuroCRUD'); //Nome da pasta ROOT
 
     if(!defined('URL'))
-    define('URL', 'http://192.168.100.7/');
+    define('URL', 'http://192.168.100.7/'); //URL que está funcionando seu server. (Geralmente: "localhost". Basta.)
 
 spl_autoload_register(function ($className) {
     if (file_exists('class/' . $className . '.php'))
