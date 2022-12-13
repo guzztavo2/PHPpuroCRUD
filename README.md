@@ -11,7 +11,7 @@
 # ⚠ ATENÇÃO ⚠
 - Quando terminar de baixar o projeto e coloca-lo em sua máquina, lembre-se de ler o arquivo no root chamado 'config.php', para-se alterar as informações de banco de dados, quanto informaçõs de URL's e outro parâmetros necessários para rodar o sistema.
 
-# Partes que foram finalizadas:
+# Partes que foram finalizadas: 
 
 # MODELS: Informação
 ## Para esse projeto, só foi preciso utilizar um modelo, que - o coloquei numa classe chamada INFORMAÇÃO:
