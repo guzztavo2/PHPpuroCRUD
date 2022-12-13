@@ -7,7 +7,7 @@ if (!defined('APP_ROOT')) {
 
 class informacaoController
 {
-    public const URLinformacaoController = application::HOME_PATH.'informacao/';
+    public const URLinformacaoController = application::HOME_PATH . 'informacao/';
     public const VIEW = 1;
     public const ADD = 2;
     public const DELETE = 3;
@@ -22,11 +22,11 @@ class informacaoController
     }
     public static function inputGETPageAtual(): int
     {
-        $item = (isset($_GET['pagina'])) ? filter_input(INPUT_GET, 'pagina', FILTER_SANITIZE_NUMBER_INT) : 1;
-        $item = intval($item);
-        if (gettype($item) !== 'integer' || $item === 0)
+        $item = (isset($_GET['pagina'])) ? (int)filter_input(INPUT_GET, 'pagina', FILTER_VALIDATE_INT) : 1;
+        if (gettype($item) !== 'integer' || $item <= 0)
             redirectSecurity();
-    
+
+
         return $item;
     }
     public static function listarTodos(array $where = null): array

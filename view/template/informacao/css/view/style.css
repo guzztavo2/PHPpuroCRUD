@@ -160,11 +160,17 @@ div.informacoes {
   align-items: center;
 
   justify-content: center;
-
+  cursor: pointer;
+  user-select: none;
   transition: ease-in-out 0.2s;
 
 }
+.dragging{
+  transform: scale(110%);
+  border: 0.1vw solid #000000;
+  opacity: 50%;
 
+}
 div.informacoes.dark {
 
   background-color: var(--Effect);

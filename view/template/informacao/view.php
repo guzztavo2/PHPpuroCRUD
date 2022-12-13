@@ -97,9 +97,9 @@ $paginaAtual = $this->paginacao($dataPage['Quantidade'], $quantidadeTotalPaginas
                 //ob_clean();
                 //$value[0]->getID();
                 if ($count % 2 === 0)
-                    echo "<div class='informacoes flexRow'>";
+                    echo "<div draggable='true' class='informacoes flexRow'>";
                 else
-                    echo "<div class='informacoes dark flexRow'>";
+                    echo "<div draggable='true' class='informacoes dark flexRow'>";
 
                 $selectedHTML =  " <h4> <label class='containerCheck'>
                     <input  id='checkInfo' type='checkbox'>

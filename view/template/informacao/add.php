@@ -6,31 +6,24 @@ if (!defined('APP_ROOT')) {
 
 
 extract($dataPage);
-
-const POR_PAGINA = 6;
-
-if (!isset($quantidadeinput)) {
-    $quantidadeinput = 0;
-}
-
-$paginacao = (int)ceil($quantidadeinput / POR_PAGINA);
-$pagina = isset($_GET['pagina']) ? filter_input(INPUT_GET, 'pagina', FILTER_VALIDATE_INT) : 1;
-if ($pagina === false || $pagina === 0)
-    application::redirect(informacaoController::URLinformacaoController . 'add');
 $auxPagina = false;
-if($quantidadeinput === 1){
+//echo $paginacao;
+if ($quantidadeinput === 0 || $quantidadeinput === null) {
     $auxPagina = true;
+    unset($_SESSION['INFORMACAO_LIST']);
 }
+
+$InformacoesSalvas = isset($_SESSION['INFORMACAO_LIST']) ? $_SESSION['INFORMACAO_LIST'] : null;
+$InformacoesSalvas = isset($InformacoesSalvas['pagina=' . @$_GET['pagina']]) ?  $InformacoesSalvas['pagina=' . $_GET['pagina']] : null;
+if (!isset($_SESSION['INFORMACAO_LIST']) || count($_SESSION['INFORMACAO_LIST']) <= 0)
+    $InformacoesSalvas = null;
+
 ?>
 
 <div class="container flexColumn boxShadow">
     <div class="w100 menulinks flexRow">
-        <small class="home w50"><a href="http://#"><i class="fa-solid fa-house"></i>
+        <small class="home w100"><a href="<?php echo informacaoController::URLinformacaoController ?>"><i class="fa-solid fa-house"></i>
                 Home
-
-            </a></small>
-        <small class="delete w50"><a href="http://#"> <i class="fa-solid fa-minus"></i>
-                Remover
 
             </a></small>
     </div>
@@ -45,52 +38,58 @@ if($quantidadeinput === 1){
 
             </div>
         <?php } else { ?>
-                            <div class="buttonWrapp box w100 flexRow">
-                                <div class="btn w50 Salvar"><h3>Salvar</h3></div>
-                                <div class="btn w50 Cancelar"><h3>Cancelar</h3></div>
+            <div class="buttonWrapp w100 flexRow">
+                <div class="btn w50 Salvar">
+                    <h3 class="box" id="salvar">Salvar</h3>
+                </div>
+                <div class="btn w50 Cancelar">
+                    <h3 class="box">Cancelar</h3>
+                </div>
+            </div>
+
+            <div class="listInput w100">
+                <form class="w100 flexColumn" action="" method="post">
+                    <?php for ($n = 1; $n <= $quantidadeInputAdicionar; $n++) {
+                        if ($InformacoesSalvas !== null) {
+
+                            $valor = (string)$InformacoesSalvas[$n - 1]['valor'];
+                    ?>
+                            <div class="box informacaoWrapper w100 flexColumn">
+                                <label for=""><small>Digite a Informação, deixe o campo vazio caso não queira salvar:</small></label>
+                                <input type="text" id="adicionarInformacao" class="box" name="" placeholder="Digite aqui a informação" value="<?php echo (strlen($valor) > 0) ? $valor : null ?>" id="">
                             </div>
-       
-        <div class="listInput w100">
-            <form class="w100 flexColumn" action="" method="post">
-                <div class="box informacaoWrapper w100 flexColumn">
-                    <label for=""><small>Digite a Informação, deixe o campo vazio caso não queira salvar:</small></label>
-                    <input type="text" id="adicionarInformacao" class="box" name="" placeholder="Digite aqui a informação" id="">
-                </div>
-                <div class="box informacaoWrapper w100 flexColumn">
-                    <label for=""><small>Digite a Informação, deixe o campo vazio caso não queira salvar:</small></label>
-                    <input type="text" id="adicionarInformacao" class="box" name="" placeholder="Digite aqui a informação" id="">
-                </div>
-                <div class="box informacaoWrapper w100 flexColumn">
-                    <label for=""><small>Digite a Informação, deixe o campo vazio caso não queira salvar:</small></label>
-                    <input type="text" id="adicionarInformacao" class="box" name="" placeholder="Digite aqui a informação" id="">
-                </div>
-                <div class="box informacaoWrapper w100 flexColumn">
-                    <label for=""><small>Digite a Informação, deixe o campo vazio caso não queira salvar:</small></label>
-                    <input type="text" id="adicionarInformacao" class="box" name="" placeholder="Digite aqui a informação" id="">
-                </div>
-                <div class="box informacaoWrapper w100 flexColumn">
-                    <label for=""><small>Digite a Informação, deixe o campo vazio caso não queira salvar:</small></label>
-                    <input type="text" id="adicionarInformacao" class="box" name="" placeholder="Digite aqui a informação" id="">
-                </div>
-                <div class="box informacaoWrapper w100 flexColumn">
-                    <label for=""><small>Digite a Informação, deixe o campo vazio caso não queira salvar:</small></label>
-                    <input type="text" id="adicionarInformacao" class="box" name="" placeholder="Digite aqui a informação" id="">
-                </div>
-            </form>
-        </div>
+
+                        <?php
+                        } else {
+
+
+
+
+                        ?>
+                            <div class="box informacaoWrapper w100 flexColumn">
+                                <label for=""><small>Digite a Informação, deixe o campo vazio caso não queira salvar:</small></label>
+                                <input type="text" id="adicionarInformacao" class="box" name="" placeholder="Digite aqui a informação" id="">
+                            </div>
+
+                    <?php   }
+                    } ?>
+
+
+                </form>
+            </div>
     </div>
 
     <div class="paginacao flexRow">
         <?php
 
-        for ($count = 1; $count <= $paginacao; $count++) {
-            if ($count === $pagina)
-                echo "<a class='marcado' href='" . informacaoView::generateGETurl("pagina", $count) . "'><h1>$count</h1></a>";
-            else
-                echo "<a href='" . informacaoView::generateGETurl("pagina", $count) . "'><h1>$count</h1></a>";
-        }
+            for ($count = 1; $count <= $paginacao; $count++) {
+                if ($count === $pagina)
+                    echo "<a id='pagina' class='marcado' href='" . informacaoView::generateGETurl("pagina", $count) . "'><h1>$count</h1></a>";
+                else
+                    echo "<a id='pagina' href='" . informacaoView::generateGETurl("pagina", $count) . "'><h1>$count</h1></a>";
+            }
         ?>
 
     </div>
-    <?php } ?>
+<?php } ?>
 </div>

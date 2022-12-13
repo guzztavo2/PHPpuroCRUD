@@ -52,8 +52,7 @@ class informacaoView
 
                 break;
         }
-        die();
-        return '';
+        exit;
     }
     private function includeAllFiles()
     {
@@ -62,8 +61,9 @@ class informacaoView
     }
     private function verificarPOST($typePost)
     {
-
+   
         if (isset($_POST) && count($_POST) > 0) {
+  
 
             ob_clean();
 
@@ -71,12 +71,17 @@ class informacaoView
                 case 'view':
                     $this->viewPost();
                     break;
+                case 'add':
+                    $this->addPost();
+                    break;
             }
 
-            die();
+            exit;
         }
+ 
+
     }
-    private function ViewPost()
+    private function viewPost()
     {
         $listSelectedItens = filter_input_array(INPUT_POST, FILTER_VALIDATE_INT);
 
@@ -101,10 +106,63 @@ class informacaoView
                 if ($listCookieSelected !== null)
                     $listCookieSelectedCount = (count(json_decode($listCookieSelected, JSON_OBJECT_AS_ARRAY)) > 0) ? count((array)json_decode($listCookieSelected)) : 0;
                 echo $listCookieSelectedCount;
+                exit;
                 break;
             default:
                 redirectSecurity();
         }
+    }
+    private function addPost()
+    {
+        $listSelectedItens = filter_input_array(INPUT_POST, FILTER_DEFAULT);
+        $tipoItem = explode('/', key($listSelectedItens))[0];
+
+
+        switch ($tipoItem) {
+            case 'informacaoSession':
+                $receivedList = $listSelectedItens;
+                $resposta = [];
+                foreach ($receivedList as $key => $value) {
+                    $id = explode('/', $key)[1];
+                    $page = explode('/', $key)[2];
+                    $resposta[$page][] = [
+                        'ID' => $id,
+                        'valor' => $value
+                    ];
+                }
+                //unset($_SESSION['INFORMACAO_LIST']);
+                $sessionList = [];
+                if (isset($_SESSION['INFORMACAO_LIST'])) {
+                    $sessionList = $_SESSION['INFORMACAO_LIST'];
+                }
+                $sessionList = array_merge($sessionList, $resposta);
+                $_SESSION['INFORMACAO_LIST'] = $sessionList;
+                //var_export($sessionList);
+                break;
+            case 'CancelarSession':
+                unset($_SESSION['INFORMACAO_LIST']);
+                break;
+            case 'SALVAR_SESSION':
+                $listPost = filter_input_array(INPUT_POST, FILTER_DEFAULT);
+                $resultadoList = [];
+                foreach ($listPost as $key => $value) {
+                 $resultadoList[] = new informacao($value);
+                }
+                var_export($resultadoList);
+                die;
+
+                $sessionList = (isset($_SESSION['INFORMACAO_LIST'])) ? $_SESSION['INFORMACAO_LIST'] : null;
+                $sessionList = ($sessionList !== null && count($sessionList) > 0) ? $sessionList : null;
+                if($sessionList === null){
+                    echo 'Não há itens para serem salvos!';
+                    exit;
+                }
+                // foreach($sessionList as $key => $value){
+                //     var_export($value);
+                // } 
+        }
+
+        exit;
     }
     private function postIDChecked($listSelectedItens)
     {
@@ -203,7 +261,6 @@ class informacaoView
         switch ($this->getTypePage()) {
             case 'view':
                 $this->renderizar(self::viewPage());
-
                 break;
             case 'add':
                 $this->renderizar(self::addPage());
@@ -262,14 +319,15 @@ class informacaoView
         return $url;
     }
 
-    private function paginacao($quantidadeTotal, &$quantidadePaginas = null): int | null
+    private function paginacao($quantidadeTotal, &$quantidadePaginas = null, $porPagina = null): int | null
     {
 
         if ($quantidadeTotal === 0)
             return null;
 
+        if ($porPagina === null)
+            $porPagina = self::ELEMENTOS_POR_PAGINA;
 
-        $porPagina = self::ELEMENTOS_POR_PAGINA;
         $paginaAtual = informacaoController::inputGETPageAtual();
 
 
@@ -285,14 +343,49 @@ class informacaoView
     }
     private static function addPage(): array
     {
+        $quantidadeinput = isset($_GET['quantidadeinput']) ? filter_input(INPUT_GET, 'quantidadeinput', FILTER_VALIDATE_INT) : null;
 
-        $quantidadeinput = isset($_GET['quantidadeinput']) ? filter_input(INPUT_GET, 'quantidadeinput', FILTER_VALIDATE_INT) : 1;
         if ($quantidadeinput === false) {
             echo "Nessa requisição, é necessário passar apenas números. Provavelmente algum engano ou erro. <a href=" . informacaoController::URLinformacaoController . ">Clique aqui para voltar para a pagina inicial</a>.";
             die();
         }
 
-        return ['quantidadeinput' => $quantidadeinput];
+        $pagina = (int)isset($_GET['pagina']) ? filter_input(INPUT_GET, 'pagina', FILTER_VALIDATE_INT) : null;
+
+        if ($pagina === false || $pagina === 0)
+            application::redirect(informacaoController::URLinformacaoController . 'add');
+
+        if ($pagina !== null && $quantidadeinput === null)
+            application::redirect(informacaoController::URLinformacaoController . 'add');
+        $quantidadeInputAdicionar = 0;
+        if ($quantidadeinput !== null) {
+            self::verificarInt(1, 50, $quantidadeinput);
+            if ($pagina !== null) {
+                $quantidadeInputAdicionar = ceil($quantidadeinput -  (($pagina - 1) * 6));
+            } else {
+                $quantidadeInputAdicionar = ceil($quantidadeinput -  ((1 - 1) * 6));
+            }
+        }
+        $POR_PAGINA = 6;
+        if ($quantidadeInputAdicionar > $POR_PAGINA) {
+            $quantidadeInputAdicionar = $POR_PAGINA;
+        }
+        if (!isset($quantidadeinput)) {
+            $quantidadeinput = 0;
+        }
+        $paginacao = ceil($quantidadeinput / $POR_PAGINA);
+        return [
+            'quantidadeinput' => $quantidadeinput,
+            'pagina' => $pagina,
+            'paginacao' => $paginacao,
+            'quantidadeInputAdicionar' => $quantidadeInputAdicionar
+        ];
+    }
+    private static function verificarInt($minvalue, $maxvalue, $value)
+    {
+        if ((int)$value < $minvalue || (int)$value > $maxvalue) {
+            application::redirect(informacaoController::URLinformacaoController . 'add');
+        }
     }
     private function deletePage()
     {

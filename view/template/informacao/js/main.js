@@ -36,12 +36,13 @@ class formPrepare {
     formListPrepare(listToObect, key) {
 
         let listResult = [];
-
+    
 
         for (let n = 0; n < listToObect.length; n++) {
             let item = new formPrepare(key, listToObect[n]);
             listResult.push(item);
         }
+    
         return listResult;
 
     }
@@ -56,17 +57,40 @@ class formPrepare {
     }
 }
 class conexaoPHP {
+    prepareToConnect(ArrayData, typeData, elementResponse) {
+        let formPrepare = mainJS.formPrepare();
+        formPrepare = formPrepare.formListPrepare(ArrayData, typeData);
+   
+        let phpConnect = mainJS.conexaoPHP();
+       
+        phpConnect.setPOSTsendToServer(formPrepare, typeData);
 
+   
+    
+        if (elementResponse !== undefined)
+            phpConnect.setFormResponse(elementResponse);
+    
+        phpConnect.prepare('POST', window.location.href);
+        phpConnect.conectar();
+    }
     setFormResponse(element) {
         this.formResponse = element;
     }
-    setPOSTsendToServer(formPrepareObjectOrList) {
+    setPOSTsendToServer(formPrepareObjectOrList, typeData) {
         let listItens = formPrepare.objectToList(formPrepareObjectOrList);
+       
         let form = new FormData(), count = 0;
         listItens.forEach(function (item) {
-            //item[0] = ID
-            //item[1] = valor
-            form.append(item[0] + '/' + count, item[1]);
+            switch(typeData){
+                case 'informacaoSession':
+                    let url = window.location.search;
+                    url = url.substring(url.indexOf('pagina'));
+                    form.append(item[0] + '/' + count + '/' + url, item[1]);
+                    break;
+                default:
+                    form.append(item[0] + '/' + count, item[1]);
+                break;
+            }
             ++count;
         })
         console.log(form);
@@ -74,6 +98,8 @@ class conexaoPHP {
     }
     prepare(postGetConection, url) {
         let xhr = new XMLHttpRequest();
+
+        url = window.location.href.substring(0,window.location.href.indexOf(window.location.search));
         xhr.open(postGetConection, url);
         this.XMLHttpRequest = xhr;
 
@@ -81,7 +107,7 @@ class conexaoPHP {
 
     conectar() {
         if (this.XMLHttpRequest === null || this.XMLHttpRequest === undefined)
-            throw new Error('Você precisa definir o PREPARE desse OBJETO para poder utiliza-lo.');
+            throw new Error('Você precisa definir o método: PREPARE desse OBJETO para poder utiliza-lo.');
 
         let xhr = this.XMLHttpRequest;
         if (this.formPrepare !== null && this.formPrepare !== undefined)
@@ -98,7 +124,8 @@ class conexaoPHP {
             }
         } else {
             xhr.onloadend = function () {
-                //console.log(this.response);
+                console.log(this.response);
+                xhr.abort();
             }
         }
 
