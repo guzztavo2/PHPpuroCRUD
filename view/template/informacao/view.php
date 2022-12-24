@@ -159,7 +159,7 @@ $paginaAtual = $this->paginacao($dataPage['Quantidade'], $quantidadeTotalPaginas
 
             $getPage = intval($paginaAtual);
 
-            for ($n = $paginaInicio; $n <= $paginaFinal; $n++) {
+            for ($n = $paginaInicio; $n <= $paginaFinal + 1; $n++) {
                 if ((int)$n === $getPage)
                     echo "<a id='pagina' class='marcado' href='" . informacaoView::generateGETurl("pagina", $n) . "'><h1>$n</h1></a>";
 

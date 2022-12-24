@@ -8,16 +8,17 @@ include_once('supermodel.php');
 class informacao extends supermodel
 {
     private $informacao;
-    private $dataCriacao;
-    private $dataAtualizacao;
+    private DateTime $dataCriacao;
+    private DateTime $dataAtualizacao;
+
     public function __construct($informacao = null)
     {
         $this->setTableName(TB_INFORMACOES);
         if ($informacao !== null) {
             if ($this->informacao !== null)
-                $this->dataAtualizacao = date('Y-m-d H:i:s');
+                $this->dataAtualizacao = new DateTime('Y-m-d H:i:s');
             else
-                $this->dataCriacao = date('Y-m-d H:i:s');
+                $this->dataCriacao = new DateTime('Y-m-d H:i:s');
 
             $this->definindoID();
             $this->informacao = $informacao;
@@ -47,9 +48,17 @@ class informacao extends supermodel
     {
         $this->dataAtualizacao = $dataAtualizacao;
     }
+    
     public static function getClassVar(): array
     {
         return array_keys(get_class_vars('informacao'));
+    }
+    public static function returnInformacaoDataFromID(string | int $id):informacao{
+       
+        $resultado = [];
+        self::constructIndexedArray(array(self::listarTodos(array('WHERE `id` = ? LIMIT 1', array($id)))[0]), $resultado);
+
+        return $resultado[0];
     }
     private function definindoID()
     {
@@ -76,16 +85,40 @@ class informacao extends supermodel
             }
         }
     }
+    private function exitsInDatabase(): bool
+    {
+        try {
+            $pdo = database::conectar()->prepare('SELECT * FROM `' . $this->getTableName() . '` WHERE `id` = ?');
+            if (!$pdo->execute(array($this->id)))
+                throw new Exception('Não foi possivel estabelecer a conexão com o banco de dados, aguarde ou tente novamente mais tarde.');
+            if ($pdo->rowCount() == 0)
+                return false;
+            else
+                return true;
+        } catch (Exception $e) {
+            exit($e->getMessage());
+        }
+    }
     public function salvar()
     {
-        if (isset($dataAtualizacao)) {
-            try {
+        try {
+            if ($this->exitsInDatabase() === true) {
                 $pdo = database::conectar()->prepare('UPDATE `' . $this->getTableName() . '` SET `informacao`= ?, `dataAtualizacao` = ? WHERE `id` = ?');
                 if (!$pdo->execute(array($this->informacao, $this->dataAtualizacao, $this->id)))
                     throw new Exception('Não foi possivel estabelecer a conexão com o banco de dados, aguarde ou tente novamente mais tarde.');
-            } catch (Exception $e) {
-                die($e->getMessage());
+            } else {
+                if ($this->dataAtualizacao == null || !isset($this->dataAtualizacao)) {
+                    $pdo = database::conectar()->prepare('INSERT INTO `' . $this->getTableName() . '` values(?, ?, ?, NULL)');
+                    if (!$pdo->execute(array($this->id, $this->informacao, $this->dataCriacao)))
+                        throw new Exception('Não foi possivel estabelecer a conexão com o banco de dados, aguarde ou tente novamente mais tarde.');
+                } else {
+                    $pdo = database::conectar()->prepare('INSERT INTO `' . $this->getTableName() . '` values(?, ?, ?, ?)');
+                    if (!$pdo->execute(array($this->id, $this->informacao, $this->dataCriacao, $this->dataAtualizacao)))
+                        throw new Exception('Não foi possivel estabelecer a conexão com o banco de dados, aguarde ou tente novamente mais tarde.');
+                }
             }
+        } catch (Exception $e) {
+            die($e->getMessage());
         }
     }
     private static function selectAllPDO(array $where = null)
@@ -166,6 +199,7 @@ class informacao extends supermodel
 
         return $pdo->fetchAll();
     }
+
     public static function quantidadeInformacoes(array $where = null): int
     {
         $queryBuscar = self::buscarQuery($where['buscar']);
@@ -182,12 +216,14 @@ class informacao extends supermodel
             $resultado = [];
             $isNull = true;
         }
+        
         foreach ($indexedArray as $key => $value) {
             $informacao = new informacao();
             $informacao->setID($value['id']);
             $informacao->setInformacao($value['informacao']);
-            $informacao->setDataCriacao($value['dataCriacao']);
-            $informacao->setDataAtualizacao($value['dataAtualizacao']);
+            $informacao->setDataCriacao(new DateTime($value['dataCriacao']));
+            $informacao->setDataAtualizacao(new DateTime($value['dataAtualizacao']));
+            
             $resultado[] = $informacao;
         }
 

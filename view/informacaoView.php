@@ -36,20 +36,16 @@ class informacaoView
                 if (strlen($var->getInformacao()) >= 30) {
                     $informacao = substr($var->getInformacao(), 0, 27);
                     $informacao .= '...';
-
                     return $informacao;
                 } else
                     return $var->getInformacao();
-
                 break;
 
             case 'dataCriacao':
-                return $var->getDataCriacao();
-
+                return $var->getDataCriacao()->format('Y-m-d H:i:s');
                 break;
             case 'dataAtualizacao':
-                return $var->getDataAtualizacao();
-
+                return $var->getDataAtualizacao()->format('Y-m-d H:i:s');
                 break;
         }
         exit;
@@ -61,9 +57,9 @@ class informacaoView
     }
     private function verificarPOST($typePost)
     {
-   
+
         if (isset($_POST) && count($_POST) > 0) {
-  
+
 
             ob_clean();
 
@@ -78,8 +74,6 @@ class informacaoView
 
             exit;
         }
- 
-
     }
     private function viewPost()
     {
@@ -146,14 +140,15 @@ class informacaoView
                 $listPost = filter_input_array(INPUT_POST, FILTER_DEFAULT);
                 $resultadoList = [];
                 foreach ($listPost as $key => $value) {
-                 $resultadoList[] = new informacao($value);
+                    $resultadoList[] = new informacao($value);
+                    //var_export($resultadoList[count($resultadoList) - 1]);
+                    $resultadoList[count($resultadoList) - 1]->salvar();
                 }
-                var_export($resultadoList);
                 die;
 
                 $sessionList = (isset($_SESSION['INFORMACAO_LIST'])) ? $_SESSION['INFORMACAO_LIST'] : null;
                 $sessionList = ($sessionList !== null && count($sessionList) > 0) ? $sessionList : null;
-                if($sessionList === null){
+                if ($sessionList === null) {
                     echo 'Não há itens para serem salvos!';
                     exit;
                 }
@@ -264,14 +259,14 @@ class informacaoView
                 break;
             case 'add':
                 $this->renderizar(self::addPage());
-
                 break;
             case 'delete':
                 $this->renderizar();
-
                 break;
-            case 'update':
-                $this->renderizar();
+            case 'edit':
+
+                $this->renderizar(self::editPage());
+
                 break;
             default:
                 application::redirect(informacaoController::URLinformacaoController);
@@ -281,13 +276,29 @@ class informacaoView
 
     private function renderizar(array $dataPage = null)
     {
+
+
         $this->verificarPOST($this->getTypePage());
 
         require_once('template/header.php');
         require_once('template/informacao/' . $this->getTypePage() . '.php');
         require_once('template/footer.php');
     }
+    private static function editPage(): array
+    {
+        $pagina = (int)isset($_GET['id']) ? filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) : false;
+        $informacao = informacao::returnInformacaoDataFromID($pagina);
 
+
+        if ($pagina === false) {
+            redirectSecurity();
+        }
+
+        return array(
+            'informacao' => $informacao
+
+        );
+    }
     private static function viewPage(): array
     {
         $resultado = [
@@ -330,9 +341,6 @@ class informacaoView
 
         $paginaAtual = informacaoController::inputGETPageAtual();
 
-
-
-        // USAR ESTILO PAGINACAO GOOGLE
         $quantidade = $quantidadeTotal;
         $quantidadePaginas =  ceil($quantidade / $porPagina) - 1;
 
@@ -341,6 +349,7 @@ class informacaoView
 
         return $paginaAtual;
     }
+
     private static function addPage(): array
     {
         $quantidadeinput = isset($_GET['quantidadeinput']) ? filter_input(INPUT_GET, 'quantidadeinput', FILTER_VALIDATE_INT) : null;

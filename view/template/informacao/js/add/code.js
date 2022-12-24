@@ -63,6 +63,9 @@ function inputAdicionarInformacoes() {
          }
         })
         conexaoPHP.prepareToConnect(resultado,'SALVAR_SESSION');
+        setTimeout(() => {  
+            window.location.href = HOME_PATH + 'view/?orderBy=id&desc';
+        }, 50);
     });
 
 }

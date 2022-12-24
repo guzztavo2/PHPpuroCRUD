@@ -18,6 +18,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 session_regenerate_id();
+date_default_timezone_set('America/Sao_Paulo');
 
 if (!defined('HOST'))
     define('HOST', 'localhost');

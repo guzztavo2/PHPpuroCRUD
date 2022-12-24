@@ -1,0 +1,9 @@
+.formsWrapper{
+    display:flex;
+    flex-flow:column wrap;
+    height: 70%;
+    min-height: 300px;
+    justify-content: center;
+    align-items: center;
+
+}

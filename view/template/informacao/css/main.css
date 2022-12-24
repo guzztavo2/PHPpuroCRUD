@@ -106,7 +106,7 @@ div.paginacao h1 {
 }
 
 div.paginacao a {
-  padding: 1vw 2vw;
+  padding: 1% 2%;
   color: white;
   background-color: var(--Effect);
   box-shadow: rgba(0, 0, 0, 0.89) 0.1vw 0.1vw 0.2vw 0.1vw;

@@ -16,8 +16,9 @@ h1.title>b {
 div.menulinks small {
 
     text-align: center;
-
-
+    min-height: 50px;
+    display: flex;
+    align-items: center;
 }
 
 div.menulinks small a {
@@ -71,7 +72,7 @@ div.menulinks small.add:hover>a {
 
 div.adicionarInformacaoWrapper {
     background-color: var(--Effect3);
-    height: 73%;
+    height: 72%;
 }
 
 div.informacaoWrapper {
@@ -138,7 +139,7 @@ div.buttonWrapp div.btn {
     color: white;
     text-align: center;
     cursor: pointer;
-    height: 100%;
+
     padding: 0.5%;
     transition: ease-in-out 0.2s;
 }
@@ -159,4 +160,46 @@ div.buttonWrapp div.btn.Cancelar h3:hover {
 div.buttonWrapp div.btn.Salvar h3:hover {
     background-color: var(--trueTheme2);
     scale: 102%;
+}
+
+@media (max-width: 781px) {
+    .btn.w50{
+        width: 100%;
+    }
+    div.listInput {
+        height: 85%;
+    }
+    div.adicionarInformacaoWrapper {
+        min-height: 650px;
+    }
+    div.paginacao{
+        /* overflow: auto  ; */
+        
+        flex-flow: row wrap;
+        overflow-x:auto;
+        overflow-y:auto;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        min-height: 125px;
+        height: 12%;
+    }
+    div.paginacao a {
+        
+        width: calc(100% / 3);
+        height: 50%;
+        padding:0;
+      
+        text-align: center;
+    }
+    div.paginacao a h1{
+        width: 100%;
+        height: 100%;
+        display:flex;
+        justify-content: center;
+        align-items: center;
+    }
+    div.buttonWrapp {
+       height:15%;
+    }
 }
